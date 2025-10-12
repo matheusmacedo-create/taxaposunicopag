@@ -60,10 +60,24 @@ const formatPhone = (value: string) => {
   return cleaned;
 };
 
+// Mock CNPJ Data for simulation
+const mockCnpjData: CnpjData = {
+  cnpj: "00.000.000/0001-00",
+  razao_social: "Empresa de Teste S.A.",
+  cnae_fiscal: "6201-5/01",
+  cnae_fiscal_descricao: "Desenvolvimento de programas de computador sob encomenda",
+  endereco: "Rua da Simulação, 123 - Centro, Cidade Fictícia - SP",
+  situacao_cadastral: "ATIVA",
+  mcc: "7372", // MCC para serviços de programação
+  email_proprietario: "teste@unicopag.com.br",
+  telefone_proprietario: "11999998888",
+};
+
 export default function IndexPage() {
   const [cnpjInput, setCnpjInput] = useState<string>("");
   const [cnpjData, setCnpjData] = useState<CnpjData | null>(null);
   const [loadingCnpj, setLoadingCnpj] = useState(false);
+  const [useMockCnpj, setUseMockCnpj] = useState(false); // New state for mock CNPJ
   const [step, setStep] = useState(1); // 1: CNPJ, 2: Rates, 3: Proposals, 4: Documents, 5: Finalize
 
   // Step 2: Current Rates
@@ -109,6 +123,17 @@ export default function IndexPage() {
   const [sendMethod, setSendMethod] = useState<"email" | "whatsapp" | null>(null);
 
   const handleCnpjSearch = async () => {
+    if (useMockCnpj) {
+      // Use mock data if checkbox is checked
+      setCnpjData(mockCnpjData);
+      setResponsibleName(mockCnpjData.razao_social);
+      setResponsibleEmail(mockCnpjData.email_proprietario);
+      setResponsiblePhone(mockCnpjData.telefone_proprietario);
+      toast.success("Dados de CNPJ simulados carregados!", { id: "cnpj-fetch" });
+      setStep(2);
+      return;
+    }
+
     if (!cnpjInput || cnpjInput.replace(/\D/g, "").length !== 14) {
       toast.error("Por favor, insira um CNPJ válido com 14 dígitos.");
       return;
@@ -286,13 +311,13 @@ export default function IndexPage() {
   };
 
   const isNextButtonDisabled = useMemo(() => {
-    if (step === 1 && (!cnpjInput || cnpjInput.replace(/\D/g, "").length !== 14)) return true;
+    if (step === 1 && (!useMockCnpj && (!cnpjInput || cnpjInput.replace(/\D/g, "").length !== 14))) return true;
     if (step === 2 && (!rateSheetFile && (currentRates.debito === 0 || currentRates.creditoVista === 0 || currentRates.creditoParcelado === 0))) return true;
     if (step === 3 && !selectedProposal) return true;
     if (step === 4 && (!contractFile || !idFile || !selfieFile)) return true; // All documents required
     if (step === 5 && (!responsibleName || !responsiblePhone || !responsibleEmail || !confirmationChecked)) return true;
     return false;
-  }, [step, cnpjInput, rateSheetFile, currentRates, selectedProposal, contractFile, idFile, selfieFile, responsibleName, responsiblePhone, responsibleEmail, confirmationChecked]);
+  }, [step, cnpjInput, useMockCnpj, rateSheetFile, currentRates, selectedProposal, contractFile, idFile, selfieFile, responsibleName, responsiblePhone, responsibleEmail, confirmationChecked]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-unicopag-blue to-unicopag-dark-blue p-4 flex items-center justify-center">
@@ -313,13 +338,27 @@ export default function IndexPage() {
             <Label htmlFor="cnpj">CNPJ do Cliente</Label>
             <Input
               id="cnpj"
-              placeholder="00.000.000/0000-00"
+              placeholder="00.000.000/0001-00"
               value={formatCnpj(cnpjInput)}
               onChange={(e) => setCnpjInput(e.target.value)}
               maxLength={18}
-              disabled={loadingCnpj}
+              disabled={loadingCnpj || useMockCnpj}
             />
-            <Button onClick={handleCnpjSearch} disabled={loadingCnpj || cnpjInput.replace(/\D/g, "").length !== 14}>
+            <div className="flex items-center space-x-2 mt-2">
+              <Checkbox
+                id="use-mock-cnpj"
+                checked={useMockCnpj}
+                onCheckedChange={(checked) => setUseMockCnpj(!!checked)}
+                disabled={loadingCnpj}
+              />
+              <label
+                htmlFor="use-mock-cnpj"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Usar dados de CNPJ simulados
+              </label>
+            </div>
+            <Button onClick={handleCnpjSearch} disabled={loadingCnpj || (!useMockCnpj && (!cnpjInput || cnpjInput.replace(/\D/g, "").length !== 14))}>
               {loadingCnpj ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Buscando...
