@@ -11,6 +11,8 @@ export interface CnpjData {
   endereco: string;
   situacao_cadastral: string;
   mcc: string; // Mapped MCC
+  email_proprietario: string; // Novo campo
+  telefone_proprietario: string; // Novo campo
 }
 
 export interface Proposal {
@@ -61,6 +63,8 @@ export const fetchCnpjData = async (cnpj: string): Promise<CnpjData | null> => {
       endereco: "Rua Exemplo, 123, Centro, São Paulo - SP",
       situacao_cadastral: "ATIVA",
       mcc: "5411", // Mapped from CNAE
+      email_proprietario: "proprietario.teste@exemplo.com", // Mock email
+      telefone_proprietario: "11987654321", // Mock phone
     };
 
     toast.success("Dados do CNPJ encontrados!", { id: "cnpj-fetch" });
