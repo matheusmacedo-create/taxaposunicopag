@@ -1,12 +1,11 @@
-import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Users, TrendingUp } from "lucide-react";
 import { fetchDashboardMetrics, Metrics } from "@/api/unicopag-api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const MetricsDisplay = () => {
-  const { data: metrics, isLoading, isError } = useQuery<Metrics, Error>({
+  const { data: metrics, isLoading, isError }: UseQueryResult<Metrics | null, Error> = useQuery<Metrics | null, Error>({
     queryKey: ["dashboardMetrics"],
     queryFn: fetchDashboardMetrics,
   });

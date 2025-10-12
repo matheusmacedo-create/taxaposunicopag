@@ -1,4 +1,3 @@
-import React from "react";
 import { CnpjData } from "@/api/unicopag-api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { CnpjForm } from "@/components/cnpj/CnpjForm";
 import { ClientDetails } from "@/components/cnpj/ClientDetails";

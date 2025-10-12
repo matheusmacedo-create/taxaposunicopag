@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { generateCnpjCard } from "@/api/unicopag-api";
 import { toast } from "sonner";
 import { FileText, CheckCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+// import { cn } from "@/lib/utils"; // Removed as 'cn' is not used
 
 interface CnpjCardGeneratorProps {
   cnpj: string;

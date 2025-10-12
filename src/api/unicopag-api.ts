@@ -68,8 +68,8 @@ export const fetchCnpjData = async (cnpj: string): Promise<CnpjData | null> => {
 
 // Simulate API call to generate proposals
 export const generateProposals = async (
-  mcc: string,
-  currentRates: { debito: number; creditoVista: number; creditoParcelado: number }
+  _mcc: string, // Prefixed with _ as it's not directly used in mock
+  _currentRates: { debito: number; creditoVista: number; creditoParcelado: number } // Prefixed with _
 ): Promise<Proposal[] | null> => {
   toast.loading("Gerando propostas de taxas...", { id: "proposals-gen" });
   try {
@@ -116,9 +116,9 @@ export const generateProposals = async (
 
 // Simulate API call to save accepted proposal
 export const saveAcceptedProposal = async (
-  cnpjData: CnpjData,
-  currentRates: { debito: number; creditoVista: number; creditoParcelado: number },
-  acceptedProposal: Proposal
+  _cnpjData: CnpjData, // Prefixed with _
+  _currentRates: { debito: number; creditoVista: number; creditoParcelado: number }, // Prefixed with _
+  _acceptedProposal: Proposal // Prefixed with _
 ): Promise<boolean> => {
   toast.loading("Salvando proposta aceita...", { id: "save-proposal" });
   try {

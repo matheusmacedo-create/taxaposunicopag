@@ -1,6 +1,3 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, Users, TrendingUp } from "lucide-react";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { MetricsDisplay } from "@/components/dashboard/MetricsDisplay";
 import { RecentProposals } from "@/components/dashboard/RecentProposals";

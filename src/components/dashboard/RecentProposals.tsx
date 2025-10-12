@@ -1,12 +1,11 @@
-import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { fetchRecentProposals, RecentProposal } from "@/api/unicopag-api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const RecentProposals = () => {
-  const { data: recentProposals, isLoading, isError } = useQuery<RecentProposal[], Error>({
+  const { data: recentProposals, isLoading, isError }: UseQueryResult<RecentProposal[] | null, Error> = useQuery<RecentProposal[] | null, Error>({
     queryKey: ["recentProposals"],
     queryFn: fetchRecentProposals,
   });
@@ -63,7 +62,7 @@ export const RecentProposals = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {recentProposals.map((proposal) => (
+            {recentProposals.map((proposal: RecentProposal) => ( // Adicionado tipo explícito para 'proposal'
               <TableRow key={proposal.id}>
                 <TableCell className="font-medium">{proposal.cnpj}</TableCell>
                 <TableCell>{proposal.razao_social}</TableCell>
