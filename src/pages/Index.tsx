@@ -6,6 +6,7 @@ import { ProposalGenerator } from "@/components/proposals/ProposalGenerator";
 import { DocumentUploader } from "@/components/documents/DocumentUploader";
 import { CnpjCardGenerator } from "@/components/documents/CnpjCardGenerator";
 import { OwnerContactConfirmation } from "@/components/documents/OwnerContactConfirmation";
+import { ProposalSender } from "@/components/proposals/ProposalSender"; // Import the new component
 import { CnpjData, Proposal, saveAcceptedProposal } from "@/api/unicopag-api";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -18,6 +19,7 @@ const Index = () => {
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(null);
   const [ownerContactConfirmed, setOwnerContactConfirmed] = useState<boolean>(false);
   // const [locationShared, setLocationShared] = useState<boolean>(false); // Removido: valor não lido
+  const [proposalSent, setProposalSent] = useState<boolean>(false); // New state for proposal sent
   const [documentsUploaded, setDocumentsUploaded] = useState<boolean>(false);
   const [cnpjCardGenerated, setCnpjCardGenerated] = useState<boolean>(false);
   const [step, setStep] = useState(1);
@@ -41,7 +43,7 @@ const Index = () => {
   const handleOwnerContactConfirmed = (sharedLocation: boolean) => {
     setOwnerContactConfirmed(true);
     // setLocationShared(sharedLocation); // Removido: valor não lido
-    setStep(5); // Dados do proprietário confirmados, agora pode fazer upload de documentos
+    setStep(5); // Dados do proprietário confirmados, agora pode enviar a proposta
     if (sharedLocation && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -55,22 +57,27 @@ const Index = () => {
     }
   };
 
+  const handleProposalSent = () => {
+    setProposalSent(true);
+    setStep(6); // Proposta enviada, agora pode fazer upload de documentos
+  };
+
   const handleDocumentsUploaded = () => {
     setDocumentsUploaded(true);
-    setStep(6); // Documentos enviados, agora pode gerar cartão CNPJ
+    setStep(7); // Documentos enviados, agora pode gerar cartão CNPJ
   };
 
   const handleCnpjCardGenerated = () => {
     setCnpjCardGenerated(true);
-    setStep(7); // Cartão CNPJ gerado, agora pode finalizar
+    setStep(8); // Cartão CNPJ gerado, agora pode finalizar
   };
 
   const handleSaveProposal = async () => {
-    if (cnpjData && currentRates && selectedProposal && ownerContactConfirmed && documentsUploaded && cnpjCardGenerated) {
+    if (cnpjData && currentRates && selectedProposal && ownerContactConfirmed && proposalSent && documentsUploaded && cnpjCardGenerated) {
       const success = await saveAcceptedProposal(cnpjData, currentRates, selectedProposal);
       if (success) {
         toast.success("Proposta e documentos finalizados e salvos!");
-        setStep(8); // Final step
+        setStep(9); // Final step
       } else {
         toast.error("Falha ao finalizar e salvar a proposta.");
       }
@@ -86,6 +93,7 @@ const Index = () => {
     setSelectedProposal(null);
     setOwnerContactConfirmed(false);
     // setLocationShared(false); // Removido: valor não lido
+    setProposalSent(false);
     setDocumentsUploaded(false);
     setCnpjCardGenerated(false);
     setStep(1);
@@ -132,7 +140,7 @@ const Index = () => {
           </CardContent>
         </Card>
 
-        {/* Step 4, 5, 6, 7: Documentos e Finalização */}
+        {/* Step 4, 5, 6, 7, 8: Documentos e Finalização */}
         <Card className={step >= 4 ? "" : "opacity-50"}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -158,29 +166,44 @@ const Index = () => {
               />
             )}
 
-            {cnpjData && selectedProposal && ownerContactConfirmed && (
+            {cnpjData && currentRates && selectedProposal && ownerContactConfirmed && (
+              <ProposalSender
+                cnpjData={cnpjData}
+                currentRates={currentRates}
+                selectedProposal={selectedProposal}
+                disabled={step < 5} // Habilitado após confirmação do proprietário
+              />
+            )}
+            {/* Placeholder para indicar que a proposta foi enviada, para avançar o passo */}
+            {step === 5 && (
+              <Button onClick={handleProposalSent} variant="outline" className="w-full">
+                Marcar Proposta como Enviada
+              </Button>
+            )}
+
+            {cnpjData && selectedProposal && ownerContactConfirmed && proposalSent && (
               <>
                 <DocumentUploader
                   cnpj={cnpjData.cnpj}
                   isPJ={true} // Assuming CNPJ means PJ
                   onUploadComplete={handleDocumentsUploaded}
-                  disabled={step < 5} // Habilitado após confirmação do proprietário
+                  disabled={step < 6} // Habilitado após envio da proposta
                 />
                 <CnpjCardGenerator
                   cnpj={cnpjData.cnpj}
                   onCnpjCardGenerated={handleCnpjCardGenerated}
-                  disabled={step < 6} // Habilitado após upload de documentos
+                  disabled={step < 7} // Habilitado após upload de documentos
                 />
               </>
             )}
             <Button
               onClick={handleSaveProposal}
               className="w-full bg-unicopag-red hover:bg-unicopag-red/90 text-white"
-              disabled={step < 7 || !ownerContactConfirmed || !documentsUploaded || !cnpjCardGenerated} // Habilitado após geração do cartão CNPJ
+              disabled={step < 8 || !ownerContactConfirmed || !proposalSent || !documentsUploaded || !cnpjCardGenerated} // Habilitado após geração do cartão CNPJ
             >
               Finalizar e Salvar Proposta
             </Button>
-            {step === 8 && (
+            {step === 9 && (
               <Button onClick={resetFlow} variant="outline" className="w-full mt-4">
                 Iniciar Nova Proposta
               </Button>

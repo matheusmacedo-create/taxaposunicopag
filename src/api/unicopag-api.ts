@@ -254,3 +254,43 @@ export const uploadRateSheetForAIProcessing = async (_file: File): Promise<Ident
     return null;
   }
 };
+
+// Simulate API call to send proposal by email
+export const sendProposalByEmail = async (
+  email: string,
+  cnpjData: CnpjData,
+  currentRates: { debito: number; creditoVista: number; creditoParcelado: number },
+  proposal: Proposal
+): Promise<boolean> => {
+  toast.loading(`Enviando proposta por e-mail para ${email}...`, { id: "send-email" });
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    console.log("Simulating email send:", { email, cnpjData, currentRates, proposal });
+    toast.success("Proposta enviada por e-mail com sucesso!", { id: "send-email" });
+    return true;
+  } catch (error) {
+    console.error("Error sending email:", error);
+    toast.error("Erro ao enviar proposta por e-mail.", { id: "send-email" });
+    return false;
+  }
+};
+
+// Simulate API call to send proposal by WhatsApp
+export const sendProposalByWhatsapp = async (
+  phone: string,
+  cnpjData: CnpjData,
+  currentRates: { debito: number; creditoVista: number; creditoParcelado: number },
+  proposal: Proposal
+): Promise<boolean> => {
+  toast.loading(`Enviando proposta por WhatsApp para ${phone}...`, { id: "send-whatsapp" });
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    console.log("Simulating WhatsApp send:", { phone, cnpjData, currentRates, proposal });
+    toast.success("Proposta enviada por WhatsApp com sucesso!", { id: "send-whatsapp" });
+    return true;
+  } catch (error) {
+    console.error("Error sending WhatsApp message:", error);
+    toast.error("Erro ao enviar proposta por WhatsApp.", { id: "send-whatsapp" });
+    return false;
+  }
+};
