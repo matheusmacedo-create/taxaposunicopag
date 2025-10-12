@@ -44,7 +44,8 @@ async function handleApiResponse(response: Response, errorMessage: string) {
 
 export async function fetchCnpjData(cnpj: string): Promise<CnpjData | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/cnpj/${cnpj}`);
+    // Alterado para usar /api/consulta?documento= como mostrado no anexo
+    const response = await fetch(`${API_BASE_URL}/api/consulta?documento=${cnpj}`);
     const data = await handleApiResponse(response, "Erro ao buscar CNPJ");
     if (data) {
       toast.success("CNPJ encontrado com sucesso!");
