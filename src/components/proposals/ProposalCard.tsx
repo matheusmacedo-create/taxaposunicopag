@@ -87,8 +87,9 @@ export const ProposalCard = ({ proposal, onSelect, isSelected }: ProposalCardPro
       </CardHeader>
       <CardContent className="space-y-2 text-sm">
         <p><strong>Débito:</strong> {proposal.taxa_debito.toFixed(2)}%</p>
-        <p><strong>Crédito à Vista:</strong> {proposal.taxa_credito_vista.toFixed(2)}%</p>
+        <p><strong>Crédito à Vista:</strong> {proposal.taxa_credito_vista.toFixed(2)}% <span className="text-muted-foreground">(recebe no dia seguinte)</span></p>
         <p><strong>Crédito Parcelado:</strong> {proposal.taxa_credito_parcelado.toFixed(2)}%</p>
+        <p><strong>Pix:</strong> 0.00% <span className="text-muted-foreground">(recebe na hora)</span></p>
 
         <div className="pt-4 border-t mt-4">
           <h4 className="font-semibold mb-2 text-unicopag-black">Simulador de Taxas</h4>

@@ -35,6 +35,12 @@ export interface RecentProposal {
   date: string;
 }
 
+export interface IdentifiedRates {
+  debito: number;
+  creditoVista: number;
+  creditoParcelado: number;
+}
+
 // Simulate API call to fetch CNPJ data
 export const fetchCnpjData = async (cnpj: string): Promise<CnpjData | null> => {
   toast.loading("Buscando dados do CNPJ...", { id: "cnpj-fetch" });
@@ -213,6 +219,34 @@ export const fetchRecentProposals = async (): Promise<RecentProposal[] | null> =
     return mockRecentProposals;
   } catch (error) {
     console.error("Error fetching recent proposals:", error);
+    return null;
+  }
+};
+
+// Simulate API call to upload a rate sheet for AI processing
+export const uploadRateSheetForAIProcessing = async (_file: File): Promise<IdentifiedRates | null> => {
+  toast.loading("Analisando planilha de taxas...", { id: "rate-sheet-ai" });
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 2500)); // Simulate AI processing time
+
+    // In a real app, this would call your backend /api/ai-process-rates
+    // const formData = new FormData();
+    // formData.append('file', file);
+    // const response = await fetch(`/api/ai-process-rates`, { method: 'POST', body: formData });
+    // const data = await response.json(); // Expected to return { debito, creditoVista, creditoParcelado }
+
+    // Mock data for demonstration
+    const mockRates: IdentifiedRates = {
+      debito: 1.55,
+      creditoVista: 2.35,
+      creditoParcelado: 3.85,
+    };
+
+    toast.success("Taxas identificadas com sucesso pela IA!", { id: "rate-sheet-ai" });
+    return mockRates;
+  } catch (error) {
+    console.error("Error processing rate sheet with AI:", error);
+    toast.error("Erro ao analisar planilha de taxas. Tente novamente.", { id: "rate-sheet-ai" });
     return null;
   }
 };

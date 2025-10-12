@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { generateProposals, Proposal } from "@/api/unicopag-api";
+import { generateProposals, Proposal, IdentifiedRates } from "@/api/unicopag-api";
 import { toast } from "sonner";
 import { ProposalCard } from "./ProposalCard";
+import { RateSheetUploader } from "./RateSheetUploader"; // Import the new component
 
 interface ProposalGeneratorProps {
   mcc: string;
@@ -27,6 +28,12 @@ export const ProposalGenerator = ({
   const [creditoVista, setCreditoVista] = useState<string>("");
   const [creditoParcelado, setCreditoParcelado] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleRatesIdentified = (rates: IdentifiedRates) => {
+    setDebito(rates.debito.toFixed(2));
+    setCreditoVista(rates.creditoVista.toFixed(2));
+    setCreditoParcelado(rates.creditoParcelado.toFixed(2));
+  };
 
   const handleGenerateProposals = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,6 +62,8 @@ export const ProposalGenerator = ({
 
   return (
     <div className={`space-y-6 ${disabled ? 'pointer-events-none opacity-50' : ''}`}>
+      <RateSheetUploader onRatesIdentified={handleRatesIdentified} disabled={disabled} />
+
       <form onSubmit={handleGenerateProposals} className="space-y-4">
         <h3 className="text-md font-semibold text-unicopag-black">Taxas Atuais do Cliente</h3>
         <div>
