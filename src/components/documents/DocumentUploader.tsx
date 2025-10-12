@@ -1,10 +1,8 @@
-import { useState } from "react"; // Keep React for useState
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { uploadDocument } from "@/api/unicopag-api";
-import { toast } from "sonner";
 import { CheckCircle, UploadCloud } from "lucide-react";
-// import { cn } from "@/lib/utils"; // Removed as 'cn' is not used
 
 interface DocumentUploaderProps {
   cnpj: string;
