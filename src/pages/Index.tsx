@@ -37,6 +37,7 @@ import {
 import { toast } from "sonner";
 import { Loader2, Upload, CheckCircle2, XCircle, FileText, Mail, MessageSquare } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import ProposalSimulator from "@/components/ProposalSimulator"; // Import the new component
 
 // Helper function to format CNPJ
 const formatCnpj = (value: string) => {
@@ -535,18 +536,21 @@ export default function IndexPage() {
             )}
 
             {selectedProposal && (
-              <div className="p-4 border rounded-md bg-unicopag-light-gray mt-4">
-                <h3 className="font-semibold text-lg mb-2">Proposta Selecionada: {selectedProposal.type}</h3>
-                <p>
-                  <strong>Débito:</strong> {selectedProposal.taxa_debito.toFixed(2)}%
-                </p>
-                <p>
-                  <strong>Crédito à Vista:</strong> {selectedProposal.taxa_credito_vista.toFixed(2)}%
-                </p>
-                <p>
-                  <strong>Crédito Parcelado:</strong> {selectedProposal.taxa_credito_parcelado.toFixed(2)}%
-                </p>
-              </div>
+              <>
+                <div className="p-4 border rounded-md bg-unicopag-light-gray mt-4">
+                  <h3 className="font-semibold text-lg mb-2">Proposta Selecionada: {selectedProposal.type}</h3>
+                  <p>
+                    <strong>Débito:</strong> {selectedProposal.taxa_debito.toFixed(2)}%
+                  </p>
+                  <p>
+                    <strong>Crédito à Vista:</strong> {selectedProposal.taxa_credito_vista.toFixed(2)}%
+                  </p>
+                  <p>
+                    <strong>Crédito Parcelado:</strong> {selectedProposal.taxa_credito_parcelado.toFixed(2)}%
+                  </p>
+                </div>
+                <ProposalSimulator proposal={selectedProposal} /> {/* Integrated Simulator */}
+              </>
             )}
           </CardContent>
         )}
