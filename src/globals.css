@@ -49,6 +49,11 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* UnicoPag Brand Colors */
+    --unicopag-red: 359 76% 49%; /* #DC2626 */
+    --unicopag-black: 0 0% 0%; /* #000000 */
+    --unicopag-light-gray: 0 0% 96%; /* #F5F5F5 */
   }
 
   .dark {
@@ -87,6 +92,11 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* UnicoPag Brand Colors for Dark Mode (can be adjusted if needed) */
+    --unicopag-red: 359 76% 49%;
+    --unicopag-black: 0 0% 0%;
+    --unicopag-light-gray: 0 0% 96%;
   }
 }
 
