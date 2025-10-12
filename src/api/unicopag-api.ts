@@ -44,7 +44,8 @@ export interface IdentifiedRates {
 }
 
 // URL do seu servidor de proxy DeskData
-const DESKDATA_PROXY_URL = "http://localhost:3000/api/consulta"; 
+// Usa a variável de ambiente VITE_DESKDATA_PROXY_URL, com fallback para localhost em desenvolvimento
+const DESKDATA_PROXY_URL = import.meta.env.VITE_DESKDATA_PROXY_URL || "http://localhost:3000/api/consulta"; 
 
 // Simulate API call to fetch CNPJ data
 export const fetchCnpjData = async (cnpj: string): Promise<CnpjData | null> => {
