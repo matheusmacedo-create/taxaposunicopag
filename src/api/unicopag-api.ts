@@ -43,35 +43,41 @@ export interface IdentifiedRates {
   creditoParcelado: number;
 }
 
+// URL do seu servidor de proxy DeskData
+const DESKDATA_PROXY_URL = "http://localhost:3000/api/consulta"; 
+
 // Simulate API call to fetch CNPJ data
 export const fetchCnpjData = async (cnpj: string): Promise<CnpjData | null> => {
   toast.loading("Buscando dados do CNPJ...", { id: "cnpj-fetch" });
   try {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Chamar o servidor de proxy DeskData
+    const response = await fetch(`${DESKDATA_PROXY_URL}?documento=${cnpj}`);
+    const result = await response.json();
 
-    // In a real app, this would call your backend /api/cnpj
-    // const response = await fetch(`/api/cnpj?cnpj=${cnpj}`);
-    // const data = await response.json();
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || "Erro ao buscar dados do CNPJ no DeskData.");
+    }
 
-    // Mock data for demonstration
-    const mockData: CnpjData = {
-      cnpj: cnpj,
-      razao_social: "EMPRESA TESTE LTDA",
-      cnae_fiscal: "4711302",
-      cnae_fiscal_descricao: "Comércio varejista de mercadorias em geral, com predominância de produtos alimentícios - supermercados",
-      endereco: "Rua Exemplo, 123, Centro, São Paulo - SP",
-      situacao_cadastral: "ATIVA",
-      mcc: "5411", // Mapped from CNAE
-      email_proprietario: "proprietario.teste@exemplo.com", // Mock email
-      telefone_proprietario: "11987654321", // Mock phone
+    const deskData = result.data;
+
+    // Mapear os dados da DeskData para a sua interface CnpjData
+    const mappedData: CnpjData = {
+      cnpj: deskData.cnpj || cnpj,
+      razao_social: deskData.razao_social || deskData.nome_fantasia || "Não informado",
+      cnae_fiscal: deskData.cnae_principal_codigo || "Não informado",
+      cnae_fiscal_descricao: deskData.cnae_principal_descricao || "Não informado",
+      endereco: `${deskData.logradouro || ''}, ${deskData.numero || ''} - ${deskData.bairro || ''}, ${deskData.municipio || ''} - ${deskData.uf || ''}`,
+      situacao_cadastral: deskData.situacao_cadastral || "Não informado",
+      mcc: deskData.mcc_sugerido || "Não informado", // Assumindo que DeskData pode retornar um MCC
+      email_proprietario: deskData.email || "proprietario.teste@exemplo.com", // Usar email da DeskData ou mock
+      telefone_proprietario: deskData.telefone || "11987654321", // Usar telefone da DeskData ou mock
     };
 
     toast.success("Dados do CNPJ encontrados!", { id: "cnpj-fetch" });
-    return mockData;
-  } catch (error) {
+    return mappedData;
+  } catch (error: any) {
     console.error("Error fetching CNPJ data:", error);
-    toast.error("Erro ao buscar dados do CNPJ. Verifique o número e tente novamente.", { id: "cnpj-fetch" });
+    toast.error(error.message || "Erro ao buscar dados do CNPJ. Verifique o número e tente novamente.", { id: "cnpj-fetch" });
     return null;
   }
 };
