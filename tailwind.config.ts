@@ -62,6 +62,15 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        unicopag: {
+          red: "hsl(var(--unicopag-red))",
+          black: "hsl(var(--unicopag-black))",
+          "light-gray": "hsl(var(--unicopag-light-gray))",
+          blue: "hsl(var(--unicopag-blue))",
+          "dark-blue": "hsl(var(--unicopag-dark-blue))",
+          "gray-text": "hsl(var(--unicopag-gray-text))",
+          background: "hsl(var(--unicopag-background))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
