@@ -1,0 +1,1 @@
+// Simplified placeholder (omitted for brevity)
